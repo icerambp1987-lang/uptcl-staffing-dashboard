@@ -26,19 +26,32 @@
         header {
             text-align: center;
             color: white;
-            margin-bottom: 40px;
-            padding: 20px;
+            margin-bottom: 30px;
+            padding: 30px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
         }
 
-        h1 {
-            font-size: 2.5em;
+        .main-title {
+            font-size: 2.2em;
+            font-weight: 700;
             margin-bottom: 10px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            letter-spacing: 0.5px;
         }
 
         .subtitle {
-            font-size: 1.1em;
+            font-size: 1em;
+            opacity: 0.95;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .data-description {
+            font-size: 0.9em;
             opacity: 0.9;
+            font-style: italic;
         }
 
         .controls {
@@ -92,6 +105,7 @@
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border: 3px solid #667eea;
         }
 
         .card:hover {
@@ -176,6 +190,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
+            border: 2px solid #667eea;
         }
 
         th {
@@ -186,11 +201,13 @@
             font-weight: 600;
             position: sticky;
             top: 0;
+            border: 1px solid #555;
         }
 
         td {
-            padding: 15px;
-            border-bottom: 1px solid #eee;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-bottom: 1px solid #bbb;
         }
 
         tr:hover {
@@ -201,25 +218,33 @@
             background: #f0f4ff;
             font-weight: 600;
             color: #667eea;
+            border-left: 4px solid #667eea;
         }
 
         .group-total {
             background: #e8ecff;
             font-weight: 700;
             color: #667eea;
+            border: 1px solid #667eea;
         }
 
         .category-header {
             background: #e8ecff;
             font-weight: 600;
             color: #667eea;
+            border-left: 3px solid #764ba2;
         }
 
         .grand-total {
-            background: #667eea;
+            background: linear-gradient(90deg, #667eea, #764ba2);
             color: white;
             font-weight: 700;
             font-size: 1.1em;
+            border: 2px solid #333;
+        }
+
+        .grand-total td {
+            border: 1px solid white;
         }
 
         .number {
@@ -277,6 +302,7 @@
             border-radius: 10px;
             padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid #667eea;
         }
 
         .chart-title {
@@ -379,8 +405,12 @@
         }
 
         @media (max-width: 768px) {
-            h1 {
-                font-size: 1.8em;
+            .main-title {
+                font-size: 1.6em;
+            }
+
+            .subtitle {
+                font-size: 0.9em;
             }
 
             .summary-cards {
@@ -400,8 +430,9 @@
 <body>
     <div class="container">
         <header>
-            <h1>⚡ UPPCL स्टाफिंग डेटा डैशबोर्ड</h1>
-            <p class="subtitle">उत्तर प्रदेश पावर कॉर्पोरेशन लिमिटेड - कर्मचारी विवरण</p>
+            <div class="main-title">उत्तर प्रदेश पावर ट्रांसमिशन कारपोरेशन लि0, लखनऊ</div>
+            <div class="subtitle">स्टाफिंग डेटा डैशबोर्ड</div>
+            <div class="data-description">स्वीकृत, कार्यरत एवं रिक्त पदों का विवरण</div>
         </header>
 
         <div class="controls">
@@ -538,7 +569,7 @@
                     { name: 'निजी सचिव (श्रेणी-1)', sanctioned: 1, working: 0 }
                 ]
             },
-            'सम���ह-ख (Group B)': {
+            'समूह-ख (Group B)': {
                 'अभियन्त्रण संवर्ग': [
                     { name: 'सहायक अभियन्ता (वै0 एवं या0)', sanctioned: 698, working: 460 },
                     { name: 'सहायक अभियन्ता (जानपद)', sanctioned: 62, working: 37 }
@@ -721,16 +752,16 @@
                 grandVacant += groupVacant;
             });
 
-            // ग्रैंड टोटल
+            // महायोग (ग्रैंड टोटल)
             const grandEfficiency = calculateEfficiency(grandSanctioned, grandWorking);
             const grandRow = document.createElement('tr');
             grandRow.className = 'grand-total';
             grandRow.innerHTML = `
-                <td>कुल योग (ग्रैंड टोटल)</td>
-                <td class="number">${grandSanctioned}</td>
-                <td class="number">${grandWorking}</td>
-                <td class="number">${grandVacant}</td>
-                <td class="number">${grandEfficiency}%</td>
+                <td><strong>महायोग (कुल)</strong></td>
+                <td class="number"><strong>${grandSanctioned}</strong></td>
+                <td class="number"><strong>${grandWorking}</strong></td>
+                <td class="number"><strong>${grandVacant}</strong></td>
+                <td class="number"><strong>${grandEfficiency}%</strong></td>
             `;
             tbody.appendChild(grandRow);
         }
@@ -743,7 +774,7 @@
             for (const [group, categories] of Object.entries(positionsData)) {
                 let groupSanctioned = 0, groupWorking = 0;
 
-                // पहले ग्रुप हेडर
+                // समूह हेडर
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'group-header';
                 groupRow.innerHTML = `<td colspan="5"><strong>${group}</strong></td>`;
@@ -777,23 +808,11 @@
                         rowNum++;
                     });
 
-                    // कैटेगरी का टोटल
-                    const catVacant = catSanctioned - catWorking;
-                    const catRow = document.createElement('tr');
-                    catRow.className = 'group-total';
-                    catRow.innerHTML = `
-                        <td colspan="2" style="padding-left: 60px;"><strong>${category} - कुल</strong></td>
-                        <td class="number"><strong>${catSanctioned}</strong></td>
-                        <td class="number"><strong>${catWorking}</strong></td>
-                        <td class="number"><strong>${catVacant}</strong></td>
-                    `;
-                    tbody.appendChild(catRow);
-
                     groupSanctioned += catSanctioned;
                     groupWorking += catWorking;
                 }
 
-                // समूह का टोटल
+                // समूह का कुल
                 const groupVacant = groupSanctioned - groupWorking;
                 const groupTotalRow = document.createElement('tr');
                 groupTotalRow.className = 'group-total';
@@ -805,6 +824,29 @@
                 `;
                 tbody.appendChild(groupTotalRow);
             }
+
+            // महायोग (सभी समूहों का कुल)
+            let totalSanctioned = 0, totalWorking = 0;
+            for (const [group, categories] of Object.entries(positionsData)) {
+                for (const [category, positions] of Object.entries(categories)) {
+                    positions.forEach(pos => {
+                        totalSanctioned += pos.sanctioned;
+                        totalWorking += pos.working;
+                    });
+                }
+            }
+            const totalVacant = totalSanctioned - totalWorking;
+            const totalEfficiency = calculateEfficiency(totalSanctioned, totalWorking);
+
+            const grandTotalRow = document.createElement('tr');
+            grandTotalRow.className = 'grand-total';
+            grandTotalRow.innerHTML = `
+                <td colspan="2"><strong>महायोग (सभी समूहों का कुल)</strong></td>
+                <td class="number"><strong>${totalSanctioned}</strong></td>
+                <td class="number"><strong>${totalWorking}</strong></td>
+                <td class="number"><strong>${totalVacant}</strong></td>
+            `;
+            tbody.appendChild(grandTotalRow);
         }
 
         function editPositionName(group, category, posIndex) {
@@ -893,7 +935,7 @@
             const rows = document.getElementById('positionsTable').getElementsByTagName('tr');
 
             rows.forEach(row => {
-                if (row.classList.contains('group-header') || row.classList.contains('category-header') || row.classList.contains('group-total')) {
+                if (row.classList.contains('group-header') || row.classList.contains('category-header') || row.classList.contains('group-total') || row.classList.contains('grand-total')) {
                     row.style.display = '';
                     return;
                 }
