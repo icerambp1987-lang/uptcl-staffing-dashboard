@@ -247,6 +247,24 @@
             text-align: center;
         }
 
+        .editable-name {
+            background: #cfe9ff;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        .editable-name:hover {
+            background: #b3e5fc;
+        }
+
+        .editable-name input {
+            width: 100%;
+            border: 2px solid #2196F3;
+            padding: 5px;
+            border-radius: 3px;
+        }
+
         .chart-container {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
@@ -309,7 +327,7 @@
             margin-bottom: 20px;
         }
 
-        input[type="text"] {
+        input[type="text"].search {
             width: 100%;
             padding: 12px 15px;
             border: 2px solid #eee;
@@ -318,9 +336,19 @@
             transition: border-color 0.3s ease;
         }
 
-        input[type="text"]:focus {
+        input[type="text"].search:focus {
             outline: none;
             border-color: #667eea;
+        }
+
+        .edit-mode-indicator {
+            display: inline-block;
+            background: #4CAF50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: 10px;
         }
 
         footer {
@@ -380,6 +408,7 @@
             <button class="btn btn-print" onclick="printPage()">🖨️ प्रिंट करें</button>
             <button class="btn btn-reset" onclick="resetData()">↺ डेटा रीसेट करें</button>
             <button class="btn btn-edit" id="editToggle" onclick="toggleEditMode()">✏️ एडिट मोड चालू करें</button>
+            <span id="editIndicator"></span>
         </div>
 
         <div class="summary-cards">
@@ -440,7 +469,7 @@
 
         <div id="groups" class="tab-content" style="display:none;">
             <div class="search-box">
-                <input type="text" id="searchInput" placeholder="पद खोजें..." onkeyup="filterTable()">
+                <input type="text" class="search" id="searchInput" placeholder="पद खोजें..." onkeyup="filterTable()">
             </div>
             <div class="table-container">
                 <table>
@@ -509,7 +538,7 @@
                     { name: 'निजी सचिव (श्रेणी-1)', sanctioned: 1, working: 0 }
                 ]
             },
-            'समूह-ख (Group B)': {
+            'सम���ह-ख (Group B)': {
                 'अभियन्त्रण संवर्ग': [
                     { name: 'सहायक अभियन्ता (वै0 एवं या0)', sanctioned: 698, working: 460 },
                     { name: 'सहायक अभियन्ता (जानपद)', sanctioned: 62, working: 37 }
@@ -729,14 +758,17 @@
                     categoryRow.innerHTML = `<td colspan="5" style="padding-left: 30px;"><strong>${category}</strong></td>`;
                     tbody.appendChild(categoryRow);
 
-                    positions.forEach(pos => {
+                    positions.forEach((pos, idx) => {
                         const vacant = calculateVacant(pos.sanctioned, pos.working);
                         const row = document.createElement('tr');
+                        
+                        const nameCell = `<td class="editable-name" onclick="editPositionName('${group}', '${category}', ${idx})" title="क्लिक करके नाम बदलें">${pos.name}</td>`;
+                        
                         row.innerHTML = `
                             <td class="number">${rowNum}</td>
-                            <td style="padding-left: 60px;">${pos.name}</td>
-                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${rowNum - 1}, 'sanctioned')" title="क्लिक करके एडिट करें">${pos.sanctioned}</td>
-                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${rowNum - 1}, 'working')" title="क्लिक करके एडिट करें">${pos.working}</td>
+                            ${nameCell}
+                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${idx}, 'sanctioned')" title="क्लिक करके एडिट करें">${pos.sanctioned}</td>
+                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${idx}, 'working')" title="क्लिक करके एडिट करें">${pos.working}</td>
                             <td class="number" style="background: #e8f5e9;">${vacant}</td>
                         `;
                         tbody.appendChild(row);
@@ -775,6 +807,35 @@
             }
         }
 
+        function editPositionName(group, category, posIndex) {
+            if (!editMode) return;
+
+            const categories = positionsData[group];
+            const categoryPositions = categories[category];
+            const pos = categoryPositions[posIndex];
+            const currentName = pos.name;
+
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentName;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    pos.name = input.value || currentName;
+                    saveData();
+                }
+            };
+            input.onblur = function() {
+                pos.name = input.value || currentName;
+                saveData();
+            };
+
+            const cell = event.target;
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
         function editCell(cell, group, category, posIndex, field) {
             if (!editMode) return;
 
@@ -808,15 +869,22 @@
         function toggleEditMode() {
             editMode = !editMode;
             const btn = document.getElementById('editToggle');
+            const indicator = document.getElementById('editIndicator');
+            
             if (editMode) {
                 btn.textContent = '✓ एडिट मोड बंद करें';
                 btn.style.background = '#4CAF50';
+                indicator.innerHTML = '<span class="edit-mode-indicator">🟢 एडिट मोड सक्रिय है</span>';
                 document.querySelectorAll('.editable-cell').forEach(cell => {
+                    cell.style.cursor = 'pointer';
+                });
+                document.querySelectorAll('.editable-name').forEach(cell => {
                     cell.style.cursor = 'pointer';
                 });
             } else {
                 btn.textContent = '✏️ एडिट मोड चालू करें';
                 btn.style.background = '#2196F3';
+                indicator.innerHTML = '';
             }
         }
 
