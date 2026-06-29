@@ -132,6 +132,7 @@
             overflow: hidden;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             margin-bottom: 40px;
+            overflow-x: auto;
         }
 
         table {
@@ -145,6 +146,8 @@
             padding: 15px;
             text-align: left;
             font-weight: 600;
+            position: sticky;
+            top: 0;
         }
 
         td {
@@ -158,6 +161,12 @@
 
         .group-header {
             background: #f0f4ff;
+            font-weight: 600;
+            color: #667eea;
+        }
+
+        .category-header {
+            background: #e8ecff;
             font-weight: 600;
             color: #667eea;
         }
@@ -268,11 +277,11 @@
             }
 
             table {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
 
             th, td {
-                padding: 10px;
+                padding: 8px;
             }
         }
     </style>
@@ -317,7 +326,7 @@
 
         <div class="tabs">
             <button class="tab-btn active" onclick="showTab('overview')">📊 अवलोकन</button>
-            <button class="tab-btn" onclick="showTab('groups')">🏢 समूह विवरण</button>
+            <button class="tab-btn" onclick="showTab('groups')">🏢 सभी पद</button>
             <button class="tab-btn" onclick="showTab('charts')">📈 ग्राफ</button>
         </div>
 
@@ -463,31 +472,147 @@
 
     <script>
         const positionsData = {
-            'समूह-क': [
-                { name: 'मुख्य अभियन्ता (स्तर-1)', sanctioned: 3, working: 3, vacant: 0 },
-                { name: 'मुख्य अभियन्ता (स्तर-2)', sanctioned: 12, working: 12, vacant: -1 },
-                { name: 'अधीक्षण अभियन्ता', sanctioned: 70, working: 53, vacant: 17 },
-                { name: 'अधिशासी अभियन्ता', sanctioned: 270, working: 210, vacant: 60 },
-                { name: 'अधिशासी निदेशक', sanctioned: 1, working: 0, vacant: 1 },
-                { name: 'वरिष्ठ लेखाधिकारी', sanctioned: 9, working: 5, vacant: 4 }
-            ],
-            'समूह-ख': [
-                { name: 'सहायक अभियन्ता', sanctioned: 760, working: 497, vacant: 263 },
-                { name: 'लेखाधिकारी', sanctioned: 53, working: 19, vacant: 34 },
-                { name: 'अनुभाग अधिकारी', sanctioned: 7, working: 4, vacant: 3 }
-            ],
-            'समूह-ग': [
-                { name: 'लेखाकार', sanctioned: 186, working: 153, vacant: 33 },
-                { name: 'सहायक लेखाकार', sanctioned: 90, working: 60, vacant: 30 },
-                { name: 'तकनीशियन', sanctioned: 3447, working: 2393, vacant: 1054 },
-                { name: 'ड्राइवर', sanctioned: 6, working: 0, vacant: 6 }
-            ],
-            'समूह-घ': [
-                { name: 'श्रमिक/क्लीनर/मजदूर', sanctioned: 1468, working: 274, vacant: 1194 },
-                { name: 'कुशल श्रमिक', sanctioned: 1626, working: 96, vacant: 1530 },
-                { name: 'मुख्य/सुरक्षा प्रहरी', sanctioned: 385, working: 3, vacant: 382 },
-                { name: 'अन्य पद', sanctioned: 1512, working: 240, vacant: 1272 }
-            ]
+            'समूह-क (Group A)': {
+                'अभियन्त्रण संवर्ग': [
+                    { name: 'मुख्य अभियन्ता (स्तर-1) (वै0 एवं या0)', sanctioned: 3, working: 3, vacant: 0 },
+                    { name: 'मुख्य अभियन्ता (स्तर-2) (वै0 एवं या0)/अपर सचिव', sanctioned: 10, working: 11, vacant: -1 },
+                    { name: 'मुख्य अभियन्ता (स्तर-2) (जानपद)', sanctioned: 2, working: 1, vacant: 1 },
+                    { name: 'अधीक्षण अभियन्ता (वै0 एवं या0)/संयुक्त सचिव', sanctioned: 63, working: 46, vacant: 17 },
+                    { name: 'अधीक्षण अभियन्ता (जानपद)', sanctioned: 7, working: 7, vacant: 0 },
+                    { name: 'अधिशासी अभियन्ता (वै0 एवं या0)/उप सचिव', sanctioned: 248, working: 192, vacant: 56 },
+                    { name: 'अधिशासी अभियन्ता (जानपद)', sanctioned: 22, working: 18, vacant: 4 }
+                ],
+                'लेखा संवर्ग': [
+                    { name: 'अधिशासी निदेशक/मुख्य महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 1, vacant: 0 },
+                    { name: 'उप महाप्रबन्धक (लेखा)', sanctioned: 5, working: 1, vacant: 4 },
+                    { name: 'उप मुख्य लेखाधिकारी', sanctioned: 1, working: 1, vacant: 0 },
+                    { name: 'वरिष्ठ लेखाधिकारी', sanctioned: 9, working: 5, vacant: 4 }
+                ],
+                'कार्मिक/विधि संवर्ग': [
+                    { name: 'कम्पनी सचिव', sanctioned: 1, working: 1, vacant: 0 }
+                ],
+                'मुख्यालय संवर्ग': [
+                    { name: 'उप सचिव', sanctioned: 1, working: 1, vacant: 0 },
+                    { name: 'अनु सचिव', sanctioned: 3, working: 2, vacant: 1 },
+                    { name: 'निजी सचिव (विशेष श्रेणी)', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'निजी सचिव (श्रेणी-1)', sanctioned: 1, working: 0, vacant: 1 }
+                ]
+            },
+            'समूह-ख (Group B)': {
+                'अभियन्त्रण संवर्ग': [
+                    { name: 'सहायक अभियन्ता (वै0 एवं या0)', sanctioned: 698, working: 460, vacant: 238 },
+                    { name: 'सहायक अभियन्ता (जानपद)', sanctioned: 62, working: 37, vacant: 25 }
+                ],
+                'लेखा संवर्ग': [
+                    { name: 'लेखाधिकारी', sanctioned: 53, working: 19, vacant: 34 }
+                ],
+                'कार्मिक/विधि संवर्ग/अन्य संवर्ग': [
+                    { name: 'सहायक कार्मिक अधिकारी', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'सहायक जनसम्पर्क अधिकारी', sanctioned: 1, working: 0, vacant: 1 }
+                ],
+                'मुख्यालय संवर्ग': [
+                    { name: 'अनुभाग अधिकारी', sanctioned: 7, working: 4, vacant: 3 },
+                    { name: 'निजी सचिव (श्रेणी-2)', sanctioned: 2, working: 1, vacant: 1 }
+                ]
+            },
+            'समूह-ग (Group C)': {
+                'लेखा संवर्ग': [
+                    { name: 'लेखाकार', sanctioned: 186, working: 153, vacant: 33 },
+                    { name: 'सहायक लेखाकार', sanctioned: 90, working: 60, vacant: 30 },
+                    { name: 'लेखा लिपिक', sanctioned: 98, working: 57, vacant: 41 }
+                ],
+                'मुख्यालय संवर्ग': [
+                    { name: 'सीमा अधिकारी', sanctioned: 34, working: 3, vacant: 31 },
+                    { name: 'सहायक सीमा अधिकारी', sanctioned: 27, working: 4, vacant: 23 },
+                    { name: 'अतिरिक्त निजी सचिव', sanctioned: 6, working: 3, vacant: 3 },
+                    { name: 'ड्राइवर', sanctioned: 6, working: 0, vacant: 6 }
+                ],
+                'मुख्य अभियन्ता (जल विद्युत)': [
+                    { name: 'अवर अभियन्ता (विद्युत एवं यांत्रिक)', sanctioned: 1423, working: 1251, vacant: 172 },
+                    { name: 'अवर अभियन्ता (जानपद)', sanctioned: 180, working: 100, vacant: 80 },
+                    { name: 'तकनीशियन (लाइन)', sanctioned: 522, working: 249, vacant: 273 },
+                    { name: 'तकनीशियन (विद्युत)', sanctioned: 2925, working: 2144, vacant: 781 },
+                    { name: 'कार्यालय अधीक्षक-विशेष श्रेणी (प्रशासनिक अधिकारी)', sanctioned: 6, working: 6, vacant: 0 },
+                    { name: 'कार्यालय अधीक्षक-प्रथम (कार्यकारी अधिकारी)', sanctioned: 15, working: 5, vacant: 10 },
+                    { name: 'कार्यालय अधीक्षक-द्वितीय (सहायक कार्यकारी अधिकारी)', sanctioned: 33, working: 31, vacant: 2 },
+                    { name: 'कार्यालय सहायक-प्रथम (वरिष्ठ कार्यकारी सहायक)', sanctioned: 61, working: 38, vacant: 23 },
+                    { name: 'कार्यालय सहायक-द्वितीय', sanctioned: 422, working: 237, vacant: 185 },
+                    { name: 'कार्यालय सहायक-तृतीय', sanctioned: 521, working: 426, vacant: 95 },
+                    { name: 'आशुलिपिक श्रेणी-प्रथम (शिवर सहायक ग्रेड-1)', sanctioned: 11, working: 8, vacant: 3 },
+                    { name: 'आशुलिपिक श्रेणी-द्वितीय (शिवर सहायक ग्रेड-2)', sanctioned: 25, working: 5, vacant: 20 },
+                    { name: 'आशुलिपिक श्रेणी-तृतीय (शिवर सहायक ग्रेड-3)', sanctioned: 0, working: 3, vacant: -3 },
+                    { name: 'चालक', sanctioned: 233, working: 9, vacant: 224 },
+                    { name: 'भण्डारी', sanctioned: 22, working: 0, vacant: 22 },
+                    { name: 'सहायक भण्डारी', sanctioned: 155, working: 4, vacant: 151 }
+                ],
+                'असंलग्न/मृत पद': [
+                    { name: 'संगणक (तकनीकी सहायक) (मृत संवर्ग घोषित)', sanctioned: 57, working: 11, vacant: 46 },
+                    { name: 'मानचित्रकार (मृत संवर्ग घोषित)', sanctioned: 110, working: 3, vacant: 107 },
+                    { name: 'टी.टी-प्रथम', sanctioned: 4, working: 0, vacant: 4 },
+                    { name: 'केबिल ज्वाइन्टर', sanctioned: 12, working: 0, vacant: 12 },
+                    { name: 'अनुरेखक', sanctioned: 54, working: 0, vacant: 54 },
+                    { name: 'मैकेनिकल ग्रेड-2', sanctioned: 3, working: 0, vacant: 3 },
+                    { name: 'मिक्चर ऑपरेटर', sanctioned: 5, working: 0, vacant: 5 },
+                    { name: 'फिटर', sanctioned: 52, working: 0, vacant: 52 },
+                    { name: 'भण्डार अधीक्षक', sanctioned: 7, working: 0, vacant: 7 },
+                    { name: 'पम्प अटेंड', sanctioned: 7, working: 0, vacant: 7 },
+                    { name: 'सेन्ट्रीफ्यूजल मिस्त्री/जूनियर इलेक्ट्रीशियन', sanctioned: 49, working: 0, vacant: 49 },
+                    { name: 'क्रेन ऑपरेटर', sanctioned: 11, working: 0, vacant: 11 },
+                    { name: 'वैल्डर', sanctioned: 16, working: 0, vacant: 16 },
+                    { name: 'तकनीकी ग्रेड-द्वितीय (बाइंडर)', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'तकनीकी ग्रेड-द्वितीय (काष्ठ)', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'तकनीकी ग्रेड-द्वितीय (टेलीफोन/रेडियो)', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'ट्यूबवेल ऑपरेटर', sanctioned: 2, working: 0, vacant: 2 },
+                    { name: 'ट्रेलर ऑपरेटर', sanctioned: 13, working: 0, vacant: 13 },
+                    { name: 'टी.पी.ओ/इलेक्ट्रिशियन', sanctioned: 47, working: 0, vacant: 47 },
+                    { name: 'ऑपरेटर ग्रेड-II', sanctioned: 95, working: 0, vacant: 95 },
+                    { name: 'ऑपरेटर ग्रेड-I/II/III', sanctioned: 4, working: 0, vacant: 4 },
+                    { name: 'अटेंडेंट ग्रेड-II', sanctioned: 5, working: 0, vacant: 5 }
+                ]
+            },
+            'समूह-घ (Group D)': {
+                'लेखा संवर्ग': [
+                    { name: 'चपरासी', sanctioned: 26, working: 4, vacant: 22 }
+                ],
+                'मुख्यालय संवर्ग': [
+                    { name: 'स्वीपर', sanctioned: 2, working: 0, vacant: 2 },
+                    { name: 'चतुर्थ श्रेणी निम्न वेतनमान', sanctioned: 27, working: 0, vacant: 27 },
+                    { name: 'चतुर्थ श्रेणी उच्च वेतनमान', sanctioned: 1, working: 0, vacant: 1 }
+                ],
+                'मुख्य अभियन्ता (जल विद्युत)': [
+                    { name: 'श्रमिक/क्लीनर/मजदूर', sanctioned: 1468, working: 274, vacant: 1194 },
+                    { name: 'कुशल श्रमिक/कुशल कुली', sanctioned: 1626, working: 96, vacant: 1530 },
+                    { name: 'मुख्य/सुरक्षा प्रहरी', sanctioned: 385, working: 3, vacant: 382 },
+                    { name: 'चपरासी/रनर', sanctioned: 658, working: 132, vacant: 526 }
+                ],
+                'असंलग्न/मृत पद': [
+                    { name: 'फेरो बो/टायर/कुली/बेलदार', sanctioned: 36, working: 5, vacant: 31 },
+                    { name: 'दफ्तरी', sanctioned: 11, working: 3, vacant: 8 },
+                    { name: 'दफदार', sanctioned: 195, working: 22, vacant: 173 },
+                    { name: 'माली/गार्डनर', sanctioned: 42, working: 27, vacant: 15 },
+                    { name: 'कार्यालय चौकीदार', sanctioned: 73, working: 13, vacant: 60 },
+                    { name: 'स्टोर चौकीदार', sanctioned: 291, working: 13, vacant: 278 },
+                    { name: 'रूम सर्विस मैन', sanctioned: 2, working: 2, vacant: 0 },
+                    { name: 'कुक', sanctioned: 8, working: 5, vacant: 3 },
+                    { name: 'कुसीर बुनकर', sanctioned: 1, working: 0, vacant: 1 },
+                    { name: 'मशीन ऑपरेटर', sanctioned: 6, working: 0, vacant: 6 },
+                    { name: 'मोटर मजदूर', sanctioned: 4, working: 1, vacant: 3 },
+                    { name: 'हैमरमैन/लोहार', sanctioned: 4, working: 0, vacant: 4 },
+                    { name: 'प्लम्बर/मेट', sanctioned: 1, working: 1, vacant: 0 },
+                    { name: 'स्टोर कुली', sanctioned: 12, working: 0, vacant: 12 },
+                    { name: 'स्टोर मिस्त्री', sanctioned: 5, working: 0, vacant: 5 },
+                    { name: 'स्वच्छकार', sanctioned: 46, working: 7, vacant: 39 },
+                    { name: 'स्टोर बेदार', sanctioned: 18, working: 0, vacant: 18 },
+                    { name: 'वायरमैन', sanctioned: 4, working: 0, vacant: 4 },
+                    { name: 'वाटर वोमैन/मैन', sanctioned: 4, working: 0, vacant: 4 },
+                    { name: 'ऑटोमोबाइल मैकेनिक', sanctioned: 1, working: 1, vacant: 0 },
+                    { name: 'टर्नर/खासकी', sanctioned: 5, working: 2, vacant: 3 },
+                    { name: 'लाइन मैन', sanctioned: 10, working: 0, vacant: 10 },
+                    { name: 'लारी क्लीनर', sanctioned: 4, working: 2, vacant: 2 },
+                    { name: 'मेसन/सी.एफ.एम', sanctioned: 15, working: 0, vacant: 15 }
+                ]
+            }
         };
 
         function showTab(tabName) {
@@ -509,24 +634,31 @@
             tbody.innerHTML = '';
             let rowNum = 1;
 
-            for (const [group, positions] of Object.entries(positionsData)) {
+            for (const [group, categories] of Object.entries(positionsData)) {
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'group-header';
                 groupRow.innerHTML = `<td colspan="5"><strong>${group}</strong></td>`;
                 tbody.appendChild(groupRow);
 
-                positions.forEach(pos => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td class="number">${rowNum}</td>
-                        <td>${pos.name}</td>
-                        <td class="number">${pos.sanctioned}</td>
-                        <td class="number">${pos.working}</td>
-                        <td class="number">${pos.vacant}</td>
-                    `;
-                    tbody.appendChild(row);
-                    rowNum++;
-                });
+                for (const [category, positions] of Object.entries(categories)) {
+                    const categoryRow = document.createElement('tr');
+                    categoryRow.className = 'category-header';
+                    categoryRow.innerHTML = `<td colspan="5" style="padding-left: 30px;"><strong>${category}</strong></td>`;
+                    tbody.appendChild(categoryRow);
+
+                    positions.forEach(pos => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td class="number">${rowNum}</td>
+                            <td style="padding-left: 60px;">${pos.name}</td>
+                            <td class="number">${pos.sanctioned}</td>
+                            <td class="number">${pos.working}</td>
+                            <td class="number">${pos.vacant}</td>
+                        `;
+                        tbody.appendChild(row);
+                        rowNum++;
+                    });
+                }
             }
         }
 
@@ -535,7 +667,7 @@
             const rows = document.getElementById('positionsTable').getElementsByTagName('tr');
 
             rows.forEach(row => {
-                if (row.classList.contains('group-header')) {
+                if (row.classList.contains('group-header') || row.classList.contains('category-header')) {
                     row.style.display = '';
                     return;
                 }
