@@ -41,6 +41,44 @@
             opacity: 0.9;
         }
 
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            background: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .btn-print {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-reset {
+            background: #f44336;
+            color: white;
+        }
+
+        .btn-edit {
+            background: #2196F3;
+            color: white;
+        }
+
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -165,15 +203,48 @@
             color: #667eea;
         }
 
+        .group-total {
+            background: #e8ecff;
+            font-weight: 700;
+            color: #667eea;
+        }
+
         .category-header {
             background: #e8ecff;
             font-weight: 600;
             color: #667eea;
         }
 
+        .grand-total {
+            background: #667eea;
+            color: white;
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
         .number {
             text-align: center;
             font-weight: 600;
+        }
+
+        .editable-cell {
+            background: #fffacd;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: background 0.3s ease;
+        }
+
+        .editable-cell:hover {
+            background: #ffeb3b;
+        }
+
+        .editable-cell input {
+            width: 100%;
+            border: 2px solid #667eea;
+            padding: 5px;
+            border-radius: 3px;
+            font-weight: 600;
+            text-align: center;
         }
 
         .chart-container {
@@ -234,13 +305,6 @@
             font-weight: 600;
         }
 
-        .chart-value {
-            width: 50px;
-            text-align: right;
-            font-weight: 600;
-            color: #333;
-        }
-
         .search-box {
             margin-bottom: 20px;
         }
@@ -265,6 +329,25 @@
             padding: 20px;
             opacity: 0.8;
             margin-top: 40px;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .controls, .tabs, .search-box {
+                display: none;
+            }
+
+            .table-container {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            table {
+                font-size: 0.9em;
+            }
         }
 
         @media (max-width: 768px) {
@@ -293,10 +376,16 @@
             <p class="subtitle">उत्तर प्रदेश पावर कॉर्पोरेशन लिमिटेड - कर्मचारी विवरण</p>
         </header>
 
+        <div class="controls">
+            <button class="btn btn-print" onclick="printPage()">🖨️ प्रिंट करें</button>
+            <button class="btn btn-reset" onclick="resetData()">↺ डेटा रीसेट करें</button>
+            <button class="btn btn-edit" id="editToggle" onclick="toggleEditMode()">✏️ एडिट मोड चालू करें</button>
+        </div>
+
         <div class="summary-cards">
             <div class="card">
                 <div class="card-title">कुल स्वीकृत पद</div>
-                <div class="card-value">13,751</div>
+                <div class="card-value" id="totalSanctioned">13,751</div>
                 <div class="card-detail">📊 सभी समूहों में</div>
                 <div class="vacancy-bar">
                     <div class="vacancy-fill" style="width: 100%;"></div>
@@ -305,21 +394,21 @@
 
             <div class="card">
                 <div class="card-title">कार्यरत कर्मचारी</div>
-                <div class="card-value">6,234</div>
+                <div class="card-value" id="totalWorking">6,234</div>
                 <div class="card-detail">✓ पद भरे हुए</div>
-                <div class="card-detail">45.3% दक्षता</div>
+                <div class="card-detail" id="efficiencyText">45.3% दक्षता</div>
                 <div class="vacancy-bar">
-                    <div class="vacancy-fill" style="width: 45.3%;"></div>
+                    <div class="vacancy-fill" id="workingBar" style="width: 45.3%;"></div>
                 </div>
             </div>
 
             <div class="card">
                 <div class="card-title">रिक्त पद</div>
-                <div class="card-value">7,517</div>
+                <div class="card-value" id="totalVacant">7,517</div>
                 <div class="card-detail">✗ भरे जाने बाकी</div>
-                <div class="card-detail">54.7% खाली</div>
+                <div class="card-detail" id="vacancyText">54.7% खाली</div>
                 <div class="vacancy-bar">
-                    <div class="vacancy-fill" style="width: 54.7%;"></div>
+                    <div class="vacancy-fill" id="vacantBar" style="width: 54.7%;"></div>
                 </div>
             </div>
         </div>
@@ -342,42 +431,8 @@
                             <th class="number">दक्षता %</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr class="group-header">
-                            <td>समूह-क (Group A)</td>
-                            <td class="number">379</td>
-                            <td class="number">290</td>
-                            <td class="number">89</td>
-                            <td class="number">76.5%</td>
-                        </tr>
-                        <tr class="group-header">
-                            <td>समूह-ख (Group B)</td>
-                            <td class="number">824</td>
-                            <td class="number">521</td>
-                            <td class="number">303</td>
-                            <td class="number">63.2%</td>
-                        </tr>
-                        <tr class="group-header">
-                            <td>समूह-ग (Group C)</td>
-                            <td class="number">7,557</td>
-                            <td class="number">4,810</td>
-                            <td class="number">2,747</td>
-                            <td class="number">63.7%</td>
-                        </tr>
-                        <tr class="group-header">
-                            <td>समूह-घ (Group D)</td>
-                            <td class="number">4,991</td>
-                            <td class="number">613</td>
-                            <td class="number">4,378</td>
-                            <td class="number">12.3%</td>
-                        </tr>
-                        <tr style="background: #f0f4ff; font-weight: 700;">
-                            <td>कुल योग</td>
-                            <td class="number">13,751</td>
-                            <td class="number">6,234</td>
-                            <td class="number">7,517</td>
-                            <td class="number">45.3%</td>
-                        </tr>
+                    <tbody id="overviewTable">
+                        <!-- डेटा JavaScript द्वारा लोड होगा -->
                     </tbody>
                 </table>
             </div>
@@ -409,58 +464,12 @@
             <div class="chart-container">
                 <div class="chart-card">
                     <div class="chart-title">समूह-वार दक्षता तुलना</div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-क</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 76.5%;">76.5%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-ख</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 63.2%;">63.2%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-ग</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 63.7%;">63.7%</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-घ</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 12.3%;">12.3%</div>
-                        </div>
-                    </div>
+                    <div id="efficiencyChart"></div>
                 </div>
 
                 <div class="chart-card">
                     <div class="chart-title">समूह-वार कर्मचारी संख्या</div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-क</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 4.7%;">290</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-ख</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 8.4%;">521</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-ग</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 77.2%;">4,810</div>
-                        </div>
-                    </div>
-                    <div class="chart-bar">
-                        <div class="chart-label">समूह-घ</div>
-                        <div class="chart-bar-container">
-                            <div class="chart-bar-fill" style="width: 9.8%;">613</div>
-                        </div>
-                    </div>
+                    <div id="employeeChart"></div>
                 </div>
             </div>
         </div>
@@ -471,149 +480,166 @@
     </div>
 
     <script>
-        const positionsData = {
+        let editMode = false;
+        let positionsData = {
             'समूह-क (Group A)': {
                 'अभियन्त्रण संवर्ग': [
-                    { name: 'मुख्य अभियन्ता (स्तर-1) (वै0 एवं या0)', sanctioned: 3, working: 3, vacant: 0 },
-                    { name: 'मुख्य अभियन्ता (स्तर-2) (वै0 एवं या0)/अपर सचिव', sanctioned: 10, working: 11, vacant: -1 },
-                    { name: 'मुख्य अभियन्ता (स्तर-2) (जानपद)', sanctioned: 2, working: 1, vacant: 1 },
-                    { name: 'अधीक्षण अभियन्ता (वै0 एवं या0)/संयुक्त सचिव', sanctioned: 63, working: 46, vacant: 17 },
-                    { name: 'अधीक्षण अभियन्ता (जानपद)', sanctioned: 7, working: 7, vacant: 0 },
-                    { name: 'अधिशासी अभियन्ता (वै0 एवं या0)/उप सचिव', sanctioned: 248, working: 192, vacant: 56 },
-                    { name: 'अधिशासी अभियन्ता (जानपद)', sanctioned: 22, working: 18, vacant: 4 }
+                    { name: 'मुख्य अभियन्ता (स्तर-1) (वै0 एवं या0)', sanctioned: 3, working: 3 },
+                    { name: 'मुख्य अभियन्ता (स्तर-2) (वै0 एवं या0)/अपर सचिव', sanctioned: 10, working: 11 },
+                    { name: 'मुख्य अभियन्ता (स्तर-2) (जानपद)', sanctioned: 2, working: 1 },
+                    { name: 'अधीक्षण अभियन्ता (वै0 एवं या0)/संयुक्त सचिव', sanctioned: 63, working: 46 },
+                    { name: 'अधीक्षण अभियन्ता (जानपद)', sanctioned: 7, working: 7 },
+                    { name: 'अधिशासी अभियन्ता (वै0 एवं या0)/उप सचिव', sanctioned: 248, working: 192 },
+                    { name: 'अधिशासी अभियन्ता (जानपद)', sanctioned: 22, working: 18 }
                 ],
                 'लेखा संवर्ग': [
-                    { name: 'अधिशासी निदेशक/मुख्य महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 1, vacant: 0 },
-                    { name: 'उप महाप्रबन्धक (लेखा)', sanctioned: 5, working: 1, vacant: 4 },
-                    { name: 'उप मुख्य लेखाधिकारी', sanctioned: 1, working: 1, vacant: 0 },
-                    { name: 'वरिष्ठ लेखाधिकारी', sanctioned: 9, working: 5, vacant: 4 }
+                    { name: 'अधिशासी निदेशक/मुख्य महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 0 },
+                    { name: 'महाप्रबन्धक (लेखा एवं सम्प्रेक्षा)', sanctioned: 1, working: 1 },
+                    { name: 'उप महाप्रबन्धक (लेखा)', sanctioned: 5, working: 1 },
+                    { name: 'उप मुख्य लेखाधिकारी', sanctioned: 1, working: 1 },
+                    { name: 'वरिष्ठ लेखाधिकारी', sanctioned: 9, working: 5 }
                 ],
                 'कार्मिक/विधि संवर्ग': [
-                    { name: 'कम्पनी सचिव', sanctioned: 1, working: 1, vacant: 0 }
+                    { name: 'कम्पनी सचिव', sanctioned: 1, working: 1 }
                 ],
                 'मुख्यालय संवर्ग': [
-                    { name: 'उप सचिव', sanctioned: 1, working: 1, vacant: 0 },
-                    { name: 'अनु सचिव', sanctioned: 3, working: 2, vacant: 1 },
-                    { name: 'निजी सचिव (विशेष श्रेणी)', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'निजी सचिव (श्रेणी-1)', sanctioned: 1, working: 0, vacant: 1 }
+                    { name: 'उप सचिव', sanctioned: 1, working: 1 },
+                    { name: 'अनु सचिव', sanctioned: 3, working: 2 },
+                    { name: 'निजी सचिव (विशेष श्रेणी)', sanctioned: 1, working: 0 },
+                    { name: 'निजी सचिव (श्रेणी-1)', sanctioned: 1, working: 0 }
                 ]
             },
             'समूह-ख (Group B)': {
                 'अभियन्त्रण संवर्ग': [
-                    { name: 'सहायक अभियन्ता (वै0 एवं या0)', sanctioned: 698, working: 460, vacant: 238 },
-                    { name: 'सहायक अभियन्ता (जानपद)', sanctioned: 62, working: 37, vacant: 25 }
+                    { name: 'सहायक अभियन्ता (वै0 एवं या0)', sanctioned: 698, working: 460 },
+                    { name: 'सहायक अभियन्ता (जानपद)', sanctioned: 62, working: 37 }
                 ],
                 'लेखा संवर्ग': [
-                    { name: 'लेखाधिकारी', sanctioned: 53, working: 19, vacant: 34 }
+                    { name: 'लेखाधिकारी', sanctioned: 53, working: 19 }
                 ],
                 'कार्मिक/विधि संवर्ग/अन्य संवर्ग': [
-                    { name: 'सहायक कार्मिक अधिकारी', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'सहायक जनसम्पर्क अधिकारी', sanctioned: 1, working: 0, vacant: 1 }
+                    { name: 'सहायक कार्मिक अधिकारी', sanctioned: 1, working: 0 },
+                    { name: 'सहायक जनसम्पर्क अधिकारी', sanctioned: 1, working: 0 }
                 ],
                 'मुख्यालय संवर्ग': [
-                    { name: 'अनुभाग अधिकारी', sanctioned: 7, working: 4, vacant: 3 },
-                    { name: 'निजी सचिव (श्रेणी-2)', sanctioned: 2, working: 1, vacant: 1 }
+                    { name: 'अनुभाग अधिकारी', sanctioned: 7, working: 4 },
+                    { name: 'निजी सचिव (श्रेणी-2)', sanctioned: 2, working: 1 }
                 ]
             },
             'समूह-ग (Group C)': {
                 'लेखा संवर्ग': [
-                    { name: 'लेखाकार', sanctioned: 186, working: 153, vacant: 33 },
-                    { name: 'सहायक लेखाकार', sanctioned: 90, working: 60, vacant: 30 },
-                    { name: 'लेखा लिपिक', sanctioned: 98, working: 57, vacant: 41 }
+                    { name: 'लेखाकार', sanctioned: 186, working: 153 },
+                    { name: 'सहायक लेखाकार', sanctioned: 90, working: 60 },
+                    { name: 'लेखा लिपिक', sanctioned: 98, working: 57 }
                 ],
                 'मुख्यालय संवर्ग': [
-                    { name: 'सीमा अधिकारी', sanctioned: 34, working: 3, vacant: 31 },
-                    { name: 'सहायक सीमा अधिकारी', sanctioned: 27, working: 4, vacant: 23 },
-                    { name: 'अतिरिक्त निजी सचिव', sanctioned: 6, working: 3, vacant: 3 },
-                    { name: 'ड्राइवर', sanctioned: 6, working: 0, vacant: 6 }
+                    { name: 'सीमा अधिकारी', sanctioned: 34, working: 3 },
+                    { name: 'सहायक सीमा अधिकारी', sanctioned: 27, working: 4 },
+                    { name: 'अतिरिक्त निजी सचिव', sanctioned: 6, working: 3 },
+                    { name: 'ड्राइवर', sanctioned: 6, working: 0 }
                 ],
                 'मुख्य अभियन्ता (जल विद्युत)': [
-                    { name: 'अवर अभियन्ता (विद्युत एवं यांत्रिक)', sanctioned: 1423, working: 1251, vacant: 172 },
-                    { name: 'अवर अभियन्ता (जानपद)', sanctioned: 180, working: 100, vacant: 80 },
-                    { name: 'तकनीशियन (लाइन)', sanctioned: 522, working: 249, vacant: 273 },
-                    { name: 'तकनीशियन (विद्युत)', sanctioned: 2925, working: 2144, vacant: 781 },
-                    { name: 'कार्यालय अधीक्षक-विशेष श्रेणी (प्रशासनिक अधिकारी)', sanctioned: 6, working: 6, vacant: 0 },
-                    { name: 'कार्यालय अधीक्षक-प्रथम (कार्यकारी अधिकारी)', sanctioned: 15, working: 5, vacant: 10 },
-                    { name: 'कार्यालय अधीक्षक-द्वितीय (सहायक कार्यकारी अधिकारी)', sanctioned: 33, working: 31, vacant: 2 },
-                    { name: 'कार्यालय सहायक-प्रथम (वरिष्ठ कार्यकारी सहायक)', sanctioned: 61, working: 38, vacant: 23 },
-                    { name: 'कार्यालय सहायक-द्वितीय', sanctioned: 422, working: 237, vacant: 185 },
-                    { name: 'कार्यालय सहायक-तृतीय', sanctioned: 521, working: 426, vacant: 95 },
-                    { name: 'आशुलिपिक श्रेणी-प्रथम (शिवर सहायक ग्रेड-1)', sanctioned: 11, working: 8, vacant: 3 },
-                    { name: 'आशुलिपिक श्रेणी-द्वितीय (शिवर सहायक ग्रेड-2)', sanctioned: 25, working: 5, vacant: 20 },
-                    { name: 'आशुलिपिक श्रेणी-तृतीय (शिवर सहायक ग्रेड-3)', sanctioned: 0, working: 3, vacant: -3 },
-                    { name: 'चालक', sanctioned: 233, working: 9, vacant: 224 },
-                    { name: 'भण्डारी', sanctioned: 22, working: 0, vacant: 22 },
-                    { name: 'सहायक भण्डारी', sanctioned: 155, working: 4, vacant: 151 }
+                    { name: 'अवर अभियन्ता (विद्युत एवं यांत्रिक)', sanctioned: 1423, working: 1251 },
+                    { name: 'अवर अभियन्ता (जानपद)', sanctioned: 180, working: 100 },
+                    { name: 'तकनीशियन (लाइन)', sanctioned: 522, working: 249 },
+                    { name: 'तकनीशियन (विद्युत)', sanctioned: 2925, working: 2144 },
+                    { name: 'कार्यालय अधीक्षक-विशेष श्रेणी', sanctioned: 6, working: 6 },
+                    { name: 'कार्यालय अधीक्षक-प्रथम', sanctioned: 15, working: 5 },
+                    { name: 'कार्यालय अधीक्षक-द्वितीय', sanctioned: 33, working: 31 },
+                    { name: 'कार्यालय सहायक-प्रथम', sanctioned: 61, working: 38 },
+                    { name: 'कार्यालय सहायक-द्वितीय', sanctioned: 422, working: 237 },
+                    { name: 'कार्यालय सहायक-तृतीय', sanctioned: 521, working: 426 },
+                    { name: 'आशुलिपिक श्रेणी-प्रथम', sanctioned: 11, working: 8 },
+                    { name: 'आशुलिपिक श्रेणी-द्वितीय', sanctioned: 25, working: 5 },
+                    { name: 'आशुलिपिक श्रेणी-तृतीय', sanctioned: 0, working: 3 },
+                    { name: 'चालक', sanctioned: 233, working: 9 },
+                    { name: 'भण्डारी', sanctioned: 22, working: 0 },
+                    { name: 'सहायक भण्डारी', sanctioned: 155, working: 4 }
                 ],
                 'असंलग्न/मृत पद': [
-                    { name: 'संगणक (तकनीकी सहायक) (मृत संवर्ग घोषित)', sanctioned: 57, working: 11, vacant: 46 },
-                    { name: 'मानचित्रकार (मृत संवर्ग घोषित)', sanctioned: 110, working: 3, vacant: 107 },
-                    { name: 'टी.टी-प्रथम', sanctioned: 4, working: 0, vacant: 4 },
-                    { name: 'केबिल ज्वाइन्टर', sanctioned: 12, working: 0, vacant: 12 },
-                    { name: 'अनुरेखक', sanctioned: 54, working: 0, vacant: 54 },
-                    { name: 'मैकेनिकल ग्रेड-2', sanctioned: 3, working: 0, vacant: 3 },
-                    { name: 'मिक्चर ऑपरेटर', sanctioned: 5, working: 0, vacant: 5 },
-                    { name: 'फिटर', sanctioned: 52, working: 0, vacant: 52 },
-                    { name: 'भण्डार अधीक्षक', sanctioned: 7, working: 0, vacant: 7 },
-                    { name: 'पम्प अटेंड', sanctioned: 7, working: 0, vacant: 7 },
-                    { name: 'सेन्ट्रीफ्यूजल मिस्त्री/जूनियर इलेक्ट्रीशियन', sanctioned: 49, working: 0, vacant: 49 },
-                    { name: 'क्रेन ऑपरेटर', sanctioned: 11, working: 0, vacant: 11 },
-                    { name: 'वैल्डर', sanctioned: 16, working: 0, vacant: 16 },
-                    { name: 'तकनीकी ग्रेड-द्वितीय (बाइंडर)', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'तकनीकी ग्रेड-द्वितीय (काष्ठ)', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'तकनीकी ग्रेड-द्वितीय (टेलीफोन/रेडियो)', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'ट्यूबवेल ऑपरेटर', sanctioned: 2, working: 0, vacant: 2 },
-                    { name: 'ट्रेलर ऑपरेटर', sanctioned: 13, working: 0, vacant: 13 },
-                    { name: 'टी.पी.ओ/इलेक्ट्रिशियन', sanctioned: 47, working: 0, vacant: 47 },
-                    { name: 'ऑपरेटर ग्रेड-II', sanctioned: 95, working: 0, vacant: 95 },
-                    { name: 'ऑपरेटर ग्रेड-I/II/III', sanctioned: 4, working: 0, vacant: 4 },
-                    { name: 'अटेंडेंट ग्रेड-II', sanctioned: 5, working: 0, vacant: 5 }
+                    { name: 'संगणक (तकनीकी सहायक)', sanctioned: 57, working: 11 },
+                    { name: 'मानचित्रकार', sanctioned: 110, working: 3 },
+                    { name: 'टी.टी-प्रथम', sanctioned: 4, working: 0 },
+                    { name: 'केबिल ज्वाइन्टर', sanctioned: 12, working: 0 },
+                    { name: 'अनुरेखक', sanctioned: 54, working: 0 }
                 ]
             },
             'समूह-घ (Group D)': {
                 'लेखा संवर्ग': [
-                    { name: 'चपरासी', sanctioned: 26, working: 4, vacant: 22 }
+                    { name: 'चपरासी', sanctioned: 26, working: 4 }
                 ],
                 'मुख्यालय संवर्ग': [
-                    { name: 'स्वीपर', sanctioned: 2, working: 0, vacant: 2 },
-                    { name: 'चतुर्थ श्रेणी निम्न वेतनमान', sanctioned: 27, working: 0, vacant: 27 },
-                    { name: 'चतुर्थ श्रेणी उच्च वेतनमान', sanctioned: 1, working: 0, vacant: 1 }
+                    { name: 'स्वीपर', sanctioned: 2, working: 0 },
+                    { name: 'चतुर्थ श्रेणी निम्न वेतनमान', sanctioned: 27, working: 0 },
+                    { name: 'चतुर्थ श्रेणी उच्च वेतनमान', sanctioned: 1, working: 0 }
                 ],
                 'मुख्य अभियन्ता (जल विद्युत)': [
-                    { name: 'श्रमिक/क्लीनर/मजदूर', sanctioned: 1468, working: 274, vacant: 1194 },
-                    { name: 'कुशल श्रमिक/कुशल कुली', sanctioned: 1626, working: 96, vacant: 1530 },
-                    { name: 'मुख्य/सुरक्षा प्रहरी', sanctioned: 385, working: 3, vacant: 382 },
-                    { name: 'चपरासी/रनर', sanctioned: 658, working: 132, vacant: 526 }
+                    { name: 'श्रमिक/क्लीनर/मजदूर', sanctioned: 1468, working: 274 },
+                    { name: 'कुशल श्रमिक/कुशल कुली', sanctioned: 1626, working: 96 },
+                    { name: 'मुख्य/सुरक्षा प्रहरी', sanctioned: 385, working: 3 },
+                    { name: 'चपरासी/रनर', sanctioned: 658, working: 132 }
                 ],
                 'असंलग्न/मृत पद': [
-                    { name: 'फेरो बो/टायर/कुली/बेलदार', sanctioned: 36, working: 5, vacant: 31 },
-                    { name: 'दफ्तरी', sanctioned: 11, working: 3, vacant: 8 },
-                    { name: 'दफदार', sanctioned: 195, working: 22, vacant: 173 },
-                    { name: 'माली/गार्डनर', sanctioned: 42, working: 27, vacant: 15 },
-                    { name: 'कार्यालय चौकीदार', sanctioned: 73, working: 13, vacant: 60 },
-                    { name: 'स्टोर चौकीदार', sanctioned: 291, working: 13, vacant: 278 },
-                    { name: 'रूम सर्विस मैन', sanctioned: 2, working: 2, vacant: 0 },
-                    { name: 'कुक', sanctioned: 8, working: 5, vacant: 3 },
-                    { name: 'कुसीर बुनकर', sanctioned: 1, working: 0, vacant: 1 },
-                    { name: 'मशीन ऑपरेटर', sanctioned: 6, working: 0, vacant: 6 },
-                    { name: 'मोटर मजदूर', sanctioned: 4, working: 1, vacant: 3 },
-                    { name: 'हैमरमैन/लोहार', sanctioned: 4, working: 0, vacant: 4 },
-                    { name: 'प्लम्बर/मेट', sanctioned: 1, working: 1, vacant: 0 },
-                    { name: 'स्टोर कुली', sanctioned: 12, working: 0, vacant: 12 },
-                    { name: 'स्टोर मिस्त्री', sanctioned: 5, working: 0, vacant: 5 },
-                    { name: 'स्वच्छकार', sanctioned: 46, working: 7, vacant: 39 },
-                    { name: 'स्टोर बेदार', sanctioned: 18, working: 0, vacant: 18 },
-                    { name: 'वायरमैन', sanctioned: 4, working: 0, vacant: 4 },
-                    { name: 'वाटर वोमैन/मैन', sanctioned: 4, working: 0, vacant: 4 },
-                    { name: 'ऑटोमोबाइल मैकेनिक', sanctioned: 1, working: 1, vacant: 0 },
-                    { name: 'टर्नर/खासकी', sanctioned: 5, working: 2, vacant: 3 },
-                    { name: 'लाइन मैन', sanctioned: 10, working: 0, vacant: 10 },
-                    { name: 'लारी क्लीनर', sanctioned: 4, working: 2, vacant: 2 },
-                    { name: 'मेसन/सी.एफ.एम', sanctioned: 15, working: 0, vacant: 15 }
+                    { name: 'फेरो बो/टायर/कुली/बेलदार', sanctioned: 36, working: 5 },
+                    { name: 'दफ्तरी', sanctioned: 11, working: 3 },
+                    { name: 'दफदार', sanctioned: 195, working: 22 },
+                    { name: 'माली/गार्डनर', sanctioned: 42, working: 27 },
+                    { name: 'कार्यालय चौकीदार', sanctioned: 73, working: 13 },
+                    { name: 'स्टोर चौकीदार', sanctioned: 291, working: 13 },
+                    { name: 'अन्य पद', sanctioned: 658, working: 122 }
                 ]
             }
         };
+
+        // LocalStorage से डेटा लोड करें
+        function loadData() {
+            const saved = localStorage.getItem('uppcl_data');
+            if (saved) {
+                positionsData = JSON.parse(saved);
+            }
+        }
+
+        // LocalStorage में डेटा सेव करें
+        function saveData() {
+            localStorage.setItem('uppcl_data', JSON.stringify(positionsData));
+            updateAllCalculations();
+        }
+
+        function calculateVacant(sanctioned, working) {
+            return sanctioned - working;
+        }
+
+        function calculateEfficiency(sanctioned, working) {
+            if (sanctioned === 0) return 0;
+            return ((working / sanctioned) * 100).toFixed(1);
+        }
+
+        function updateAllCalculations() {
+            let totalSanctioned = 0, totalWorking = 0, totalVacant = 0;
+
+            for (const [group, categories] of Object.entries(positionsData)) {
+                for (const [category, positions] of Object.entries(categories)) {
+                    positions.forEach(pos => {
+                        totalSanctioned += pos.sanctioned;
+                        totalWorking += pos.working;
+                    });
+                }
+            }
+
+            totalVacant = totalSanctioned - totalWorking;
+            const efficiency = calculateEfficiency(totalSanctioned, totalWorking);
+
+            document.getElementById('totalSanctioned').textContent = totalSanctioned.toLocaleString('hi-IN');
+            document.getElementById('totalWorking').textContent = totalWorking.toLocaleString('hi-IN');
+            document.getElementById('totalVacant').textContent = totalVacant.toLocaleString('hi-IN');
+            document.getElementById('efficiencyText').textContent = efficiency + '% दक्षता';
+            document.getElementById('vacancyText').textContent = (100 - efficiency) + '% खाली';
+            document.getElementById('workingBar').style.width = efficiency + '%';
+            document.getElementById('vacantBar').style.width = (100 - efficiency) + '%';
+
+            renderOverview();
+            renderCharts();
+        }
 
         function showTab(tabName) {
             const contents = document.querySelectorAll('.tab-content');
@@ -625,40 +651,172 @@
             event.target.classList.add('active');
 
             if (tabName === 'groups') {
-                loadPositions();
+                renderPositions();
             }
         }
 
-        function loadPositions() {
+        function renderOverview() {
+            const tbody = document.getElementById('overviewTable');
+            tbody.innerHTML = '';
+
+            const groups = ['समूह-क (Group A)', 'समूह-ख (Group B)', 'समूह-ग (Group C)', 'समूह-घ (Group D)'];
+            let grandSanctioned = 0, grandWorking = 0, grandVacant = 0;
+
+            groups.forEach(group => {
+                const categories = positionsData[group];
+                let groupSanctioned = 0, groupWorking = 0;
+
+                for (const [category, positions] of Object.entries(categories)) {
+                    positions.forEach(pos => {
+                        groupSanctioned += pos.sanctioned;
+                        groupWorking += pos.working;
+                    });
+                }
+
+                const groupVacant = groupSanctioned - groupWorking;
+                const efficiency = calculateEfficiency(groupSanctioned, groupWorking);
+
+                const row = document.createElement('tr');
+                row.className = 'group-header';
+                row.innerHTML = `
+                    <td>${group}</td>
+                    <td class="number">${groupSanctioned}</td>
+                    <td class="number">${groupWorking}</td>
+                    <td class="number">${groupVacant}</td>
+                    <td class="number">${efficiency}%</td>
+                `;
+                tbody.appendChild(row);
+
+                grandSanctioned += groupSanctioned;
+                grandWorking += groupWorking;
+                grandVacant += groupVacant;
+            });
+
+            // ग्रैंड टोटल
+            const grandEfficiency = calculateEfficiency(grandSanctioned, grandWorking);
+            const grandRow = document.createElement('tr');
+            grandRow.className = 'grand-total';
+            grandRow.innerHTML = `
+                <td>कुल योग (ग्रैंड टोटल)</td>
+                <td class="number">${grandSanctioned}</td>
+                <td class="number">${grandWorking}</td>
+                <td class="number">${grandVacant}</td>
+                <td class="number">${grandEfficiency}%</td>
+            `;
+            tbody.appendChild(grandRow);
+        }
+
+        function renderPositions() {
             const tbody = document.getElementById('positionsTable');
             tbody.innerHTML = '';
             let rowNum = 1;
 
             for (const [group, categories] of Object.entries(positionsData)) {
+                let groupSanctioned = 0, groupWorking = 0;
+
+                // पहले ग्रुप हेडर
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'group-header';
                 groupRow.innerHTML = `<td colspan="5"><strong>${group}</strong></td>`;
                 tbody.appendChild(groupRow);
 
+                // कैटेगरी और पदों को लूप करें
                 for (const [category, positions] of Object.entries(categories)) {
+                    let catSanctioned = 0, catWorking = 0;
+
                     const categoryRow = document.createElement('tr');
                     categoryRow.className = 'category-header';
                     categoryRow.innerHTML = `<td colspan="5" style="padding-left: 30px;"><strong>${category}</strong></td>`;
                     tbody.appendChild(categoryRow);
 
                     positions.forEach(pos => {
+                        const vacant = calculateVacant(pos.sanctioned, pos.working);
                         const row = document.createElement('tr');
                         row.innerHTML = `
                             <td class="number">${rowNum}</td>
                             <td style="padding-left: 60px;">${pos.name}</td>
-                            <td class="number">${pos.sanctioned}</td>
-                            <td class="number">${pos.working}</td>
-                            <td class="number">${pos.vacant}</td>
+                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${rowNum - 1}, 'sanctioned')" title="क्लिक करके एडिट करें">${pos.sanctioned}</td>
+                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${rowNum - 1}, 'working')" title="क्लिक करके एडिट करें">${pos.working}</td>
+                            <td class="number" style="background: #e8f5e9;">${vacant}</td>
                         `;
                         tbody.appendChild(row);
+                        catSanctioned += pos.sanctioned;
+                        catWorking += pos.working;
                         rowNum++;
                     });
+
+                    // कैटेगरी का टोटल
+                    const catVacant = catSanctioned - catWorking;
+                    const catRow = document.createElement('tr');
+                    catRow.className = 'group-total';
+                    catRow.innerHTML = `
+                        <td colspan="2" style="padding-left: 60px;"><strong>${category} - कुल</strong></td>
+                        <td class="number"><strong>${catSanctioned}</strong></td>
+                        <td class="number"><strong>${catWorking}</strong></td>
+                        <td class="number"><strong>${catVacant}</strong></td>
+                    `;
+                    tbody.appendChild(catRow);
+
+                    groupSanctioned += catSanctioned;
+                    groupWorking += catWorking;
                 }
+
+                // समूह का टोटल
+                const groupVacant = groupSanctioned - groupWorking;
+                const groupTotalRow = document.createElement('tr');
+                groupTotalRow.className = 'group-total';
+                groupTotalRow.innerHTML = `
+                    <td colspan="2"><strong>${group} - कुल योग</strong></td>
+                    <td class="number"><strong>${groupSanctioned}</strong></td>
+                    <td class="number"><strong>${groupWorking}</strong></td>
+                    <td class="number"><strong>${groupVacant}</strong></td>
+                `;
+                tbody.appendChild(groupTotalRow);
+            }
+        }
+
+        function editCell(cell, group, category, posIndex, field) {
+            if (!editMode) return;
+
+            const categories = positionsData[group];
+            const categoryPositions = categories[category];
+            const pos = categoryPositions[posIndex];
+            const currentValue = pos[field];
+
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.value = currentValue;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    const newValue = parseInt(input.value) || 0;
+                    pos[field] = newValue;
+                    saveData();
+                }
+            };
+            input.onblur = function() {
+                const newValue = parseInt(input.value) || 0;
+                pos[field] = newValue;
+                saveData();
+            };
+
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function toggleEditMode() {
+            editMode = !editMode;
+            const btn = document.getElementById('editToggle');
+            if (editMode) {
+                btn.textContent = '✓ एडिट मोड बंद करें';
+                btn.style.background = '#4CAF50';
+                document.querySelectorAll('.editable-cell').forEach(cell => {
+                    cell.style.cursor = 'pointer';
+                });
+            } else {
+                btn.textContent = '✏️ एडिट मोड चालू करें';
+                btn.style.background = '#2196F3';
             }
         }
 
@@ -667,7 +825,7 @@
             const rows = document.getElementById('positionsTable').getElementsByTagName('tr');
 
             rows.forEach(row => {
-                if (row.classList.contains('group-header') || row.classList.contains('category-header')) {
+                if (row.classList.contains('group-header') || row.classList.contains('category-header') || row.classList.contains('group-total')) {
                     row.style.display = '';
                     return;
                 }
@@ -676,9 +834,65 @@
             });
         }
 
-        // पेज लोड होने पर positions लोड करें
+        function renderCharts() {
+            const groups = ['समूह-क', 'समूह-ख', 'समूह-ग', 'समूह-घ'];
+            let efficiencyChart = '';
+            let employeeChart = '';
+            let maxWorking = 0;
+
+            const groupStats = [];
+            for (const [group, categories] of Object.entries(positionsData)) {
+                let groupSanctioned = 0, groupWorking = 0;
+                for (const [category, positions] of Object.entries(categories)) {
+                    positions.forEach(pos => {
+                        groupSanctioned += pos.sanctioned;
+                        groupWorking += pos.working;
+                    });
+                }
+                const efficiency = calculateEfficiency(groupSanctioned, groupWorking);
+                groupStats.push({ group: group.split('(')[0].trim(), efficiency, working: groupWorking });
+                maxWorking = Math.max(maxWorking, groupWorking);
+            }
+
+            groupStats.forEach(stat => {
+                efficiencyChart += `
+                    <div class="chart-bar">
+                        <div class="chart-label">${stat.group}</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar-fill" style="width: ${stat.efficiency}%;">${stat.efficiency}%</div>
+                        </div>
+                    </div>
+                `;
+
+                employeeChart += `
+                    <div class="chart-bar">
+                        <div class="chart-label">${stat.group}</div>
+                        <div class="chart-bar-container">
+                            <div class="chart-bar-fill" style="width: ${(stat.working/maxWorking)*100}%;">${stat.working}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('efficiencyChart').innerHTML = efficiencyChart;
+            document.getElementById('employeeChart').innerHTML = employeeChart;
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        function resetData() {
+            if (confirm('क्या आप वाकई डेटा रीसेट करना चाहते हैं?')) {
+                localStorage.removeItem('uppcl_data');
+                location.reload();
+            }
+        }
+
+        // पेज लोड होने पर
         window.addEventListener('load', () => {
-            loadPositions();
+            loadData();
+            updateAllCalculations();
         });
     </script>
 </body>
