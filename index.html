@@ -108,11 +108,6 @@
             color: white;
         }
 
-        .btn-edit {
-            background: #2196F3;
-            color: white;
-        }
-
         .btn-small {
             padding: 4px 8px;
             font-size: 0.75em;
@@ -423,16 +418,6 @@
             border-color: #667eea;
         }
 
-        .edit-mode-indicator {
-            display: inline-block;
-            background: #4CAF50;
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            margin-left: 10px;
-        }
-
         footer {
             text-align: center;
             color: white;
@@ -491,7 +476,7 @@
                 padding: 5px;
             }
 
-            .controls, .tabs, .search-box, .edit-mode-indicator {
+            .controls, .tabs, .search-box {
                 display: none;
             }
 
@@ -501,8 +486,7 @@
             }
 
             .summary-cards {
-                margin-bottom: 8px;
-                page-break-inside: avoid;
+                display: none;
             }
 
             .table-container {
@@ -570,8 +554,6 @@
         <div class="controls">
             <button class="btn btn-print" onclick="printPage()">🖨️ प्रिंट करें</button>
             <button class="btn btn-reset" onclick="resetData()">↺ डेटा रीसेट करें</button>
-            <button class="btn btn-edit" id="editToggle" onclick="toggleEditMode()">✏️ एडिट मोड चालू करें</button>
-            <span id="editIndicator"></span>
         </div>
 
         <div class="summary-cards">
@@ -695,7 +677,6 @@
     </div>
 
     <script>
-        let editMode = false;
         let positionsData = {
             'समूह-क (Group A)': {
                 'अभियन्त्रण संवर्ग': [
@@ -732,7 +713,7 @@
                 'लेखा संवर्ग': [
                     { name: 'लेखाधिकारी', sanctioned: 53, working: 19 }
                 ],
-                'कार्मिक/विधि सं��र्ग/अन्य संवर्ग': [
+                'कार्मिक/विधि संवर्ग/अन्य संवर्ग': [
                     { name: 'सहायक कार्मिक अधिकारी', sanctioned: 1, working: 0 },
                     { name: 'सहायक जनसम्पर्क अधिकारी', sanctioned: 1, working: 0 }
                 ],
@@ -983,12 +964,12 @@
                         
                         const nameCell = `<td class="editable-name" ondblclick="editPositionName('${group}', '${category}', ${idx})" title="डबल क्लिक करके नाम बदलें">${pos.name}</td>`;
                         
-                        const actionButtons = editMode ? `
+                        const actionButtons = `
                             <td class="action-cell">
                                 <button class="btn-small btn-delete" onclick="deleteRow('${group}', '${category}', ${idx})">🗑️ हटाएँ</button>
                                 <button class="btn-small btn-add" onclick="insertRowAfter('${group}', '${category}', ${idx})">➕ जोड़ें</button>
                             </td>
-                        ` : '<td class="action-cell"></td>';
+                        `;
                         
                         row.innerHTML = `
                             <td class="number">${rowNum}</td>
@@ -1045,8 +1026,6 @@
         }
 
         function editPositionName(group, category, posIndex) {
-            if (!editMode) return;
-
             const categories = positionsData[group];
             const categoryPositions = categories[category];
             const pos = categoryPositions[posIndex];
@@ -1074,8 +1053,6 @@
         }
 
         function editCell(cell, group, category, posIndex, field) {
-            if (!editMode) return;
-
             const categories = positionsData[group];
             const categoryPositions = categories[category];
             const pos = categoryPositions[posIndex];
@@ -1114,23 +1091,6 @@
             const newRow = { name: 'नया पद', sanctioned: 0, working: 0 };
             positionsData[group][category].splice(posIndex + 1, 0, newRow);
             saveData();
-        }
-
-        function toggleEditMode() {
-            editMode = !editMode;
-            const btn = document.getElementById('editToggle');
-            const indicator = document.getElementById('editIndicator');
-            
-            if (editMode) {
-                btn.textContent = '✓ एडिट मोड बंद करें';
-                btn.style.background = '#4CAF50';
-                indicator.innerHTML = '<span class="edit-mode-indicator">🟢 एडिट मोड सक्रिय है</span>';
-            } else {
-                btn.textContent = '✏️ एडिट मोड चालू करें';
-                btn.style.background = '#2196F3';
-                indicator.innerHTML = '';
-            }
-            renderPositions();
         }
 
         function filterTable() {
