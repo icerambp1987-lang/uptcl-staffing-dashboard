@@ -39,6 +39,21 @@
             margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .main-title:hover {
+            opacity: 0.8;
+        }
+
+        .main-title input {
+            width: 90%;
+            padding: 10px;
+            font-size: 1em;
+            border: 2px solid white;
+            border-radius: 5px;
+            font-weight: 700;
         }
 
         .subtitle {
@@ -46,6 +61,20 @@
             opacity: 0.95;
             margin-bottom: 8px;
             font-weight: 500;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .subtitle:hover {
+            opacity: 0.7;
+        }
+
+        .subtitle input {
+            width: 80%;
+            padding: 8px;
+            font-size: 0.85em;
+            border: 2px solid white;
+            border-radius: 5px;
         }
 
         .date-section {
@@ -63,6 +92,19 @@
             color: white;
             font-weight: 600;
             font-size: 0.8em;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .date-label:hover {
+            opacity: 0.7;
+        }
+
+        .date-label input {
+            padding: 5px 8px;
+            border: none;
+            border-radius: 3px;
+            font-weight: 600;
         }
 
         .date-input {
@@ -249,6 +291,22 @@
             position: sticky;
             top: 0;
             border: 1px solid #555;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #5568d3, #6b3a8f);
+            opacity: 0.9;
+        }
+
+        th input {
+            width: 95%;
+            padding: 5px;
+            border: 2px solid white;
+            border-radius: 3px;
+            color: #333;
+            font-weight: 600;
         }
 
         td {
@@ -266,6 +324,21 @@
             font-weight: 600;
             color: #667eea;
             border-left: 4px solid #667eea;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .group-header:hover {
+            background: #e0e9ff;
+        }
+
+        .group-header input {
+            width: 95%;
+            padding: 5px;
+            border: 2px solid #667eea;
+            border-radius: 3px;
+            color: #667eea;
+            font-weight: 600;
         }
 
         .group-total {
@@ -280,6 +353,21 @@
             font-weight: 600;
             color: #667eea;
             border-left: 3px solid #764ba2;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .category-header:hover {
+            background: #d0d9ff;
+        }
+
+        .category-header input {
+            width: 95%;
+            padding: 5px;
+            border: 2px solid #764ba2;
+            border-radius: 3px;
+            color: #667eea;
+            font-weight: 600;
         }
 
         .grand-total {
@@ -339,6 +427,13 @@
         .action-cell {
             text-align: center;
             white-space: nowrap;
+        }
+
+        .percentage-cell {
+            background: #fff3e0;
+            font-weight: 600;
+            text-align: center;
+            color: #e65100;
         }
 
         .chart-container {
@@ -442,6 +537,22 @@
             color: #667eea;
             margin-bottom: 15px;
             text-align: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .summary-title:hover {
+            opacity: 0.8;
+        }
+
+        .summary-title input {
+            width: 80%;
+            padding: 8px;
+            border: 2px solid #667eea;
+            border-radius: 5px;
+            font-size: 1em;
+            font-weight: 700;
+            color: #667eea;
         }
 
         .summary-grid {
@@ -473,7 +584,8 @@
         @media print {
             body {
                 background: white;
-                padding: 5px;
+                padding: 0;
+                margin: 0;
             }
 
             .controls, .tabs, .search-box {
@@ -481,8 +593,34 @@
             }
 
             header {
-                margin-bottom: 8px;
-                padding: 10px 8px;
+                margin-bottom: 10px;
+                padding: 8px;
+                background: none;
+                border-radius: 0;
+            }
+
+            .main-title {
+                text-shadow: none;
+                color: #333;
+                font-size: 1.4em;
+                margin-bottom: 3px;
+            }
+
+            .subtitle {
+                color: #666;
+                margin-bottom: 3px;
+            }
+
+            .date-section {
+                background: none;
+                color: #333;
+                margin-bottom: 5px;
+            }
+
+            .date-label, .date-input {
+                color: #333;
+                border: 1px solid #ccc;
+                background: white;
             }
 
             .summary-cards {
@@ -492,11 +630,21 @@
             .table-container {
                 box-shadow: none;
                 page-break-inside: avoid;
-                margin-bottom: 20px;
+                margin-bottom: 15px;
             }
 
             table {
-                font-size: 0.88em;
+                font-size: 0.85em;
+            }
+
+            th {
+                background: #667eea;
+                color: white;
+                border: 1px solid #333;
+            }
+
+            td {
+                border: 1px solid #999;
             }
 
             .action-cell {
@@ -513,7 +661,33 @@
 
             .summary-section {
                 page-break-inside: avoid;
-                margin-top: 20px;
+                margin-top: 15px;
+                box-shadow: none;
+                border: 1px solid #999;
+                background: white;
+            }
+
+            .summary-title {
+                color: #333;
+                cursor: default;
+            }
+
+            .summary-item {
+                background: #f9f9f9;
+                border-left: 2px solid #667eea;
+            }
+
+            .group-header, .category-header {
+                color: #333;
+            }
+
+            .grand-total {
+                background: #e0e0e0;
+                color: #333;
+            }
+
+            .grand-total td {
+                border: 1px solid #333;
             }
         }
 
@@ -543,10 +717,10 @@
 <body>
     <div class="container">
         <header>
-            <div class="main-title">उत्तर प्रदेश पावर ट्रांसमिशन कारपोरेशन लि0, लखनऊ</div>
-            <div class="subtitle">स्वीकृत, कार्यरत एवं रिक्त पदों का विवरण</div>
+            <div class="main-title" ondblclick="editHeader('title')">उत्तर प्रदेश पावर ट्रांसमिशन कारपोरेशन लि0, लखनऊ</div>
+            <div class="subtitle" ondblclick="editHeader('subtitle')">स्वीकृत, कार्यरत एवं रिक्त पदों का विवरण</div>
             <div class="date-section">
-                <label class="date-label">दिनांक:</label>
+                <label class="date-label" ondblclick="editHeader('dateLabel')">दिनांक:</label>
                 <input type="date" class="date-input" id="reportDate">
             </div>
         </header>
@@ -598,11 +772,11 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>समूह</th>
-                            <th class="number">स्वीकृत</th>
-                            <th class="number">कार्यरत</th>
-                            <th class="number">रिक्त</th>
-                            <th class="number">दक्षता %</th>
+                            <th ondblclick="editTableHeader(this, 'overview', 0)">समूह</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'overview', 1)">स्वीकृत</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'overview', 2)">कार्यरत</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'overview', 3)">रिक्त</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'overview', 4)">दक्षता %</th>
                         </tr>
                     </thead>
                     <tbody id="overviewTable">
@@ -620,12 +794,13 @@
                 <table>
                     <thead>
                         <tr>
-                            <th>क्रम</th>
-                            <th>पद का नाम</th>
-                            <th class="number">स्वीकृत</th>
-                            <th class="number">कार्यरत</th>
-                            <th class="number">रिक्त</th>
-                            <th class="number">कार्य</th>
+                            <th ondblclick="editTableHeader(this, 'groups', 0)">क्रम</th>
+                            <th ondblclick="editTableHeader(this, 'groups', 1)">पद का नाम</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'groups', 2)">स्वीकृत</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'groups', 3)">कार्यरत</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'groups', 4)">रिक्त</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'groups', 5)">रिक्तता %</th>
+                            <th class="number" ondblclick="editTableHeader(this, 'groups', 6)">कार्य</th>
                         </tr>
                     </thead>
                     <tbody id="positionsTable">
@@ -650,7 +825,7 @@
         </div>
 
         <div id="summarySection" class="summary-section" style="display: none;">
-            <div class="summary-title">📊 डेटा सारांश</div>
+            <div class="summary-title" ondblclick="editHeader('summaryTitle')">📊 डेटा सारांश</div>
             <div class="summary-grid">
                 <div class="summary-item">
                     <div class="summary-label">कुल स्वीकृत पद</div>
@@ -677,6 +852,13 @@
     </div>
 
     <script>
+        let headerTexts = {
+            title: 'उत्तर प्रदेश पावर ट्रांसमिशन कारपोरेशन लि0, लखनऊ',
+            subtitle: 'स्वीकृत, कार्यरत एवं रिक्त पदों का विवरण',
+            dateLabel: 'दिनांक:',
+            summaryTitle: '📊 डेटा सारांश'
+        };
+
         let positionsData = {
             'समूह-क (Group A)': {
                 'अभियन्त्रण संवर्ग': [
@@ -787,7 +969,54 @@
             }
         };
 
-        // दिनांक सेट करें
+        function editHeader(type) {
+            const target = event.target;
+            const currentText = headerTexts[type];
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    headerTexts[type] = input.value || currentText;
+                    localStorage.setItem('uppcl_headers', JSON.stringify(headerTexts));
+                    location.reload();
+                }
+            };
+            input.onblur = function() {
+                headerTexts[type] = input.value || currentText;
+                localStorage.setItem('uppcl_headers', JSON.stringify(headerTexts));
+                location.reload();
+            };
+            
+            target.innerHTML = '';
+            target.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function editTableHeader(th, table, index) {
+            const currentText = th.textContent;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    th.textContent = input.value || currentText;
+                }
+            };
+            input.onblur = function() {
+                th.textContent = input.value || currentText;
+            };
+            
+            th.innerHTML = '';
+            th.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
         function initializeDate() {
             const today = new Date();
             const dateStr = today.toISOString().split('T')[0];
@@ -799,7 +1028,6 @@
             }
         }
 
-        // दिनांक सेव करें
         document.addEventListener('DOMContentLoaded', function() {
             const dateInput = document.getElementById('reportDate');
             if (dateInput) {
@@ -807,9 +1035,17 @@
                     localStorage.setItem('uppcl_date', this.value);
                 });
             }
+
+            // Load headers
+            const savedHeaders = localStorage.getItem('uppcl_headers');
+            if (savedHeaders) {
+                headerTexts = JSON.parse(savedHeaders);
+                document.querySelector('.main-title').textContent = headerTexts.title;
+                document.querySelector('.subtitle').textContent = headerTexts.subtitle;
+                document.querySelector('.summary-title').textContent = headerTexts.summaryTitle;
+            }
         });
 
-        // LocalStorage से डेटा लोड करें
         function loadData() {
             const saved = localStorage.getItem('uppcl_data');
             if (saved) {
@@ -817,7 +1053,6 @@
             }
         }
 
-        // LocalStorage में डेटा सेव करें
         function saveData() {
             localStorage.setItem('uppcl_data', JSON.stringify(positionsData));
             updateAllCalculations();
@@ -825,6 +1060,11 @@
 
         function calculateVacant(sanctioned, working) {
             return sanctioned - working;
+        }
+
+        function calculateVacancyPercentage(sanctioned, vacant) {
+            if (sanctioned === 0) return 0;
+            return ((vacant / sanctioned) * 100).toFixed(1);
         }
 
         function calculateEfficiency(sanctioned, working) {
@@ -855,7 +1095,6 @@
             document.getElementById('workingBar').style.width = efficiency + '%';
             document.getElementById('vacantBar').style.width = (100 - efficiency) + '%';
 
-            // Summary Section Update
             document.getElementById('sumSanctioned').textContent = totalSanctioned.toLocaleString('hi-IN');
             document.getElementById('sumWorking').textContent = totalWorking.toLocaleString('hi-IN');
             document.getElementById('sumVacant').textContent = totalVacant.toLocaleString('hi-IN');
@@ -876,10 +1115,6 @@
 
             if (tabName === 'groups') {
                 renderPositions();
-            }
-
-            // Hide/Show summary section
-            if (tabName === 'groups') {
                 document.getElementById('summarySection').style.display = 'block';
             } else {
                 document.getElementById('summarySection').style.display = 'none';
@@ -910,7 +1145,7 @@
                 const row = document.createElement('tr');
                 row.className = 'group-header';
                 row.innerHTML = `
-                    <td>${group}</td>
+                    <td ondblclick="editGroupName('${group}')">${group}</td>
                     <td class="number">${groupSanctioned}</td>
                     <td class="number">${groupWorking}</td>
                     <td class="number">${groupVacant}</td>
@@ -923,7 +1158,6 @@
                 grandVacant += groupVacant;
             });
 
-            // महायोग
             const grandEfficiency = calculateEfficiency(grandSanctioned, grandWorking);
             const grandRow = document.createElement('tr');
             grandRow.className = 'grand-total';
@@ -947,7 +1181,7 @@
 
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'group-header';
-                groupRow.innerHTML = `<td colspan="6"><strong>${group}</strong></td>`;
+                groupRow.innerHTML = `<td colspan="7" ondblclick="editGroupName('${group}')"><strong>${group}</strong></td>`;
                 tbody.appendChild(groupRow);
 
                 for (const [category, positions] of Object.entries(categories)) {
@@ -955,14 +1189,15 @@
 
                     const categoryRow = document.createElement('tr');
                     categoryRow.className = 'category-header';
-                    categoryRow.innerHTML = `<td colspan="6" style="padding-left: 30px;"><strong>${category}</strong></td>`;
+                    categoryRow.innerHTML = `<td colspan="7" style="padding-left: 30px;" ondblclick="editCategoryName('${group}', '${category}')"><strong>${category}</strong></td>`;
                     tbody.appendChild(categoryRow);
 
                     positions.forEach((pos, idx) => {
                         const vacant = calculateVacant(pos.sanctioned, pos.working);
+                        const vacancyPercentage = calculateVacancyPercentage(pos.sanctioned, vacant);
                         const row = document.createElement('tr');
                         
-                        const nameCell = `<td class="editable-name" ondblclick="editPositionName('${group}', '${category}', ${idx})" title="डबल क्लिक करके नाम बदलें">${pos.name}</td>`;
+                        const nameCell = `<td class="editable-name" ondblclick="editPositionName('${group}', '${category}', ${idx})">${pos.name}</td>`;
                         
                         const actionButtons = `
                             <td class="action-cell">
@@ -974,9 +1209,10 @@
                         row.innerHTML = `
                             <td class="number">${rowNum}</td>
                             ${nameCell}
-                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'sanctioned')" title="डबल क्लिक करके एडिट करें">${pos.sanctioned}</td>
-                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'working')" title="डबल क्लिक करके एडिट करें">${pos.working}</td>
+                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'sanctioned')">${pos.sanctioned}</td>
+                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'working')">${pos.working}</td>
                             <td class="number" style="background: #e8f5e9;">${vacant}</td>
+                            <td class="number percentage-cell">${vacancyPercentage}%</td>
                             ${actionButtons}
                         `;
                         tbody.appendChild(row);
@@ -997,6 +1233,7 @@
                     <td class="number"><strong>${groupSanctioned}</strong></td>
                     <td class="number"><strong>${groupWorking}</strong></td>
                     <td class="number"><strong>${groupVacant}</strong></td>
+                    <td class="number"><strong>${calculateVacancyPercentage(groupSanctioned, groupVacant)}%</strong></td>
                     <td></td>
                 `;
                 tbody.appendChild(groupTotalRow);
@@ -1020,15 +1257,14 @@
                 <td class="number"><strong>${totalSanctioned}</strong></td>
                 <td class="number"><strong>${totalWorking}</strong></td>
                 <td class="number"><strong>${totalVacant}</strong></td>
+                <td class="number"><strong>${calculateVacancyPercentage(totalSanctioned, totalVacant)}%</strong></td>
                 <td></td>
             `;
             tbody.appendChild(grandTotalRow);
         }
 
         function editPositionName(group, category, posIndex) {
-            const categories = positionsData[group];
-            const categoryPositions = categories[category];
-            const pos = categoryPositions[posIndex];
+            const pos = positionsData[group][category][posIndex];
             const currentName = pos.name;
 
             const input = document.createElement('input');
@@ -1052,10 +1288,52 @@
             input.select();
         }
 
+        function editGroupName(group) {
+            const currentText = group;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    const newGroup = input.value || currentText;
+                    if (newGroup !== currentGroup) {
+                        positionsData[newGroup] = positionsData[group];
+                        delete positionsData[group];
+                        saveData();
+                    }
+                }
+            };
+            const parent = event.target;
+            parent.innerHTML = '';
+            parent.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
+        function editCategoryName(group, category) {
+            const currentText = category;
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = currentText;
+            input.onkeypress = function(e) {
+                if (e.key === 'Enter') {
+                    const newCategory = input.value || currentText;
+                    if (newCategory !== category) {
+                        positionsData[group][newCategory] = positionsData[group][category];
+                        delete positionsData[group][category];
+                        saveData();
+                    }
+                }
+            };
+            const parent = event.target;
+            parent.innerHTML = '';
+            parent.appendChild(input);
+            input.focus();
+            input.select();
+        }
+
         function editCell(cell, group, category, posIndex, field) {
-            const categories = positionsData[group];
-            const categoryPositions = categories[category];
-            const pos = categoryPositions[posIndex];
+            const pos = positionsData[group][category][posIndex];
             const currentValue = pos[field];
 
             const input = document.createElement('input');
