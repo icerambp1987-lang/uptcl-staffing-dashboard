@@ -15,7 +15,7 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
-            padding: 15px;
+            padding: 10px;
         }
 
         .container {
@@ -26,75 +26,69 @@
         header {
             text-align: center;
             color: white;
-            margin-bottom: 20px;
-            padding: 20px 15px;
+            margin-bottom: 12px;
+            padding: 15px 12px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(10px);
         }
 
         .main-title {
-            font-size: 1.8em;
+            font-size: 1.6em;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
             letter-spacing: 0.5px;
         }
 
         .subtitle {
-            font-size: 0.95em;
-            opacity: 0.95;
-            margin-bottom: 12px;
-            font-weight: 500;
-        }
-
-        .data-description {
             font-size: 0.85em;
-            opacity: 0.9;
-            font-style: italic;
+            opacity: 0.95;
+            margin-bottom: 8px;
+            font-weight: 500;
         }
 
         .date-section {
             background: rgba(255, 255, 255, 0.15);
-            padding: 10px 15px;
+            padding: 8px 12px;
             border-radius: 8px;
-            margin-top: 10px;
+            margin-top: 8px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
 
         .date-label {
             color: white;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.8em;
         }
 
         .date-input {
-            padding: 6px 10px;
+            padding: 5px 8px;
             border: 2px solid white;
             border-radius: 5px;
-            font-size: 0.9em;
+            font-size: 0.8em;
             background: rgba(255, 255, 255, 0.9);
             cursor: pointer;
         }
 
         .controls {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 10px;
             flex-wrap: wrap;
         }
 
         .btn {
             background: white;
             border: none;
-            padding: 8px 16px;
+            padding: 7px 14px;
             border-radius: 5px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
@@ -121,53 +115,53 @@
 
         .summary-cards {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 8px;
+            margin-bottom: 12px;
         }
 
         .card {
             background: white;
             border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            padding: 10px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.15);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             border: 2px solid #667eea;
         }
 
         .card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.2);
         }
 
         .card-title {
             color: #667eea;
-            font-size: 0.75em;
+            font-size: 0.65em;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+            margin-bottom: 4px;
             font-weight: 600;
         }
 
         .card-value {
-            font-size: 1.8em;
+            font-size: 1.5em;
             font-weight: bold;
             color: #333;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
         }
 
         .card-detail {
-            font-size: 0.8em;
+            font-size: 0.7em;
             color: #666;
-            margin: 3px 0;
+            margin: 2px 0;
         }
 
         .vacancy-bar {
             width: 100%;
-            height: 6px;
+            height: 5px;
             background: #eee;
             border-radius: 3px;
-            margin-top: 10px;
+            margin-top: 6px;
             overflow: hidden;
         }
 
@@ -179,19 +173,19 @@
 
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 8px;
+            margin-bottom: 12px;
             flex-wrap: wrap;
         }
 
         .tab-btn {
             background: white;
             border: none;
-            padding: 10px 20px;
+            padding: 8px 16px;
             border-radius: 25px;
             cursor: pointer;
             font-weight: 600;
-            font-size: 0.9em;
+            font-size: 0.85em;
             transition: all 0.3s ease;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
@@ -219,13 +213,13 @@
             width: 100%;
             border-collapse: collapse;
             border: 2px solid #667eea;
-            font-size: 0.95em;
+            font-size: 0.92em;
         }
 
         th {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            padding: 12px;
+            padding: 10px;
             text-align: left;
             font-weight: 600;
             position: sticky;
@@ -234,7 +228,7 @@
         }
 
         td {
-            padding: 10px 12px;
+            padding: 9px 10px;
             border: 1px solid #ddd;
             border-bottom: 1px solid #bbb;
         }
@@ -268,7 +262,7 @@
             background: linear-gradient(90deg, #667eea, #764ba2);
             color: white;
             font-weight: 700;
-            font-size: 1em;
+            font-size: 0.98em;
             border: 2px solid #333;
         }
 
@@ -379,15 +373,15 @@
         }
 
         .search-box {
-            margin-bottom: 15px;
+            margin-bottom: 12px;
         }
 
         input[type="text"].search {
             width: 100%;
-            padding: 10px 12px;
+            padding: 9px 12px;
             border: 2px solid #eee;
             border-radius: 8px;
-            font-size: 0.95em;
+            font-size: 0.9em;
             transition: border-color 0.3s ease;
         }
 
@@ -409,43 +403,50 @@
         footer {
             text-align: center;
             color: white;
-            padding: 15px;
+            padding: 12px;
             opacity: 0.8;
-            margin-top: 30px;
-            font-size: 0.9em;
+            margin-top: 20px;
+            font-size: 0.85em;
         }
 
         @media print {
             body {
                 background: white;
-                padding: 10px;
+                padding: 5px;
             }
 
             .controls, .tabs, .search-box, .edit-mode-indicator {
                 display: none;
             }
 
+            header {
+                margin-bottom: 8px;
+                padding: 10px 8px;
+            }
+
+            .summary-cards {
+                margin-bottom: 8px;
+                page-break-inside: avoid;
+            }
+
             .table-container {
                 box-shadow: none;
                 page-break-inside: avoid;
+                margin-bottom: 20px;
             }
 
             table {
                 font-size: 0.88em;
             }
-
-            .summary-cards {
-                page-break-inside: avoid;
-            }
         }
 
         @media (max-width: 768px) {
             .main-title {
-                font-size: 1.4em;
+                font-size: 1.3em;
             }
 
             .subtitle {
-                font-size: 0.85em;
+                font-size: 0.8em;
             }
 
             .summary-cards {
@@ -457,7 +458,7 @@
             }
 
             th, td {
-                padding: 8px;
+                padding: 7px;
             }
         }
     </style>
