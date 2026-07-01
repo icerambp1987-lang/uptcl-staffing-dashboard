@@ -113,6 +113,35 @@
             color: white;
         }
 
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.75em;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-delete {
+            background: #f44336;
+            color: white;
+            margin-right: 4px;
+        }
+
+        .btn-delete:hover {
+            background: #d32f2f;
+        }
+
+        .btn-add {
+            background: #4CAF50;
+            color: white;
+        }
+
+        .btn-add:hover {
+            background: #388E3C;
+        }
+
         .summary-cards {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -276,14 +305,14 @@
         }
 
         .editable-cell {
-            background: #fffacd;
             cursor: pointer;
             border-radius: 3px;
             transition: background 0.3s ease;
+            position: relative;
         }
 
         .editable-cell:hover {
-            background: #ffeb3b;
+            background: #fff9e6;
         }
 
         .editable-cell input {
@@ -296,14 +325,13 @@
         }
 
         .editable-name {
-            background: #cfe9ff;
             cursor: pointer;
             border-radius: 3px;
             transition: background 0.3s ease;
         }
 
         .editable-name:hover {
-            background: #b3e5fc;
+            background: #e3f2fd;
         }
 
         .editable-name input {
@@ -311,6 +339,11 @@
             border: 2px solid #2196F3;
             padding: 5px;
             border-radius: 3px;
+        }
+
+        .action-cell {
+            text-align: center;
+            white-space: nowrap;
         }
 
         .chart-container {
@@ -409,6 +442,49 @@
             font-size: 0.85em;
         }
 
+        .summary-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 2px solid #667eea;
+        }
+
+        .summary-title {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #667eea;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .summary-item {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .summary-label {
+            font-size: 0.85em;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .summary-value {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: #333;
+        }
+
         @media print {
             body {
                 background: white;
@@ -437,6 +513,23 @@
 
             table {
                 font-size: 0.88em;
+            }
+
+            .action-cell {
+                display: none;
+            }
+
+            th:last-child {
+                display: none;
+            }
+
+            td:last-child {
+                display: none;
+            }
+
+            .summary-section {
+                page-break-inside: avoid;
+                margin-top: 20px;
             }
         }
 
@@ -550,6 +643,7 @@
                             <th class="number">स्वीकृत</th>
                             <th class="number">कार्यरत</th>
                             <th class="number">रिक्त</th>
+                            <th class="number">कार्य</th>
                         </tr>
                     </thead>
                     <tbody id="positionsTable">
@@ -569,6 +663,28 @@
                 <div class="chart-card">
                     <div class="chart-title">समूह-वार कर्मचारी संख्या</div>
                     <div id="employeeChart"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="summarySection" class="summary-section" style="display: none;">
+            <div class="summary-title">📊 डेटा सारांश</div>
+            <div class="summary-grid">
+                <div class="summary-item">
+                    <div class="summary-label">कुल स्वीकृत पद</div>
+                    <div class="summary-value" id="sumSanctioned">13,940</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">कुल कार्यरत कर्मचारी</div>
+                    <div class="summary-value" id="sumWorking">6,332</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">कुल रिक्त पद</div>
+                    <div class="summary-value" id="sumVacant">7,608</div>
+                </div>
+                <div class="summary-item">
+                    <div class="summary-label">दक्षता</div>
+                    <div class="summary-value" id="sumEfficiency">45.4%</div>
                 </div>
             </div>
         </div>
@@ -616,7 +732,7 @@
                 'लेखा संवर्ग': [
                     { name: 'लेखाधिकारी', sanctioned: 53, working: 19 }
                 ],
-                'कार्मिक/विधि संवर्ग/अन्य संवर्ग': [
+                'कार्मिक/विधि सं��र्ग/अन्य संवर्ग': [
                     { name: 'सहायक कार्मिक अधिकारी', sanctioned: 1, working: 0 },
                     { name: 'सहायक जनसम्पर्क अधिकारी', sanctioned: 1, working: 0 }
                 ],
@@ -758,6 +874,12 @@
             document.getElementById('workingBar').style.width = efficiency + '%';
             document.getElementById('vacantBar').style.width = (100 - efficiency) + '%';
 
+            // Summary Section Update
+            document.getElementById('sumSanctioned').textContent = totalSanctioned.toLocaleString('hi-IN');
+            document.getElementById('sumWorking').textContent = totalWorking.toLocaleString('hi-IN');
+            document.getElementById('sumVacant').textContent = totalVacant.toLocaleString('hi-IN');
+            document.getElementById('sumEfficiency').textContent = efficiency + '%';
+
             renderOverview();
             renderCharts();
         }
@@ -773,6 +895,13 @@
 
             if (tabName === 'groups') {
                 renderPositions();
+            }
+
+            // Hide/Show summary section
+            if (tabName === 'groups') {
+                document.getElementById('summarySection').style.display = 'block';
+            } else {
+                document.getElementById('summarySection').style.display = 'none';
             }
         }
 
@@ -837,7 +966,7 @@
 
                 const groupRow = document.createElement('tr');
                 groupRow.className = 'group-header';
-                groupRow.innerHTML = `<td colspan="5"><strong>${group}</strong></td>`;
+                groupRow.innerHTML = `<td colspan="6"><strong>${group}</strong></td>`;
                 tbody.appendChild(groupRow);
 
                 for (const [category, positions] of Object.entries(categories)) {
@@ -845,21 +974,29 @@
 
                     const categoryRow = document.createElement('tr');
                     categoryRow.className = 'category-header';
-                    categoryRow.innerHTML = `<td colspan="5" style="padding-left: 30px;"><strong>${category}</strong></td>`;
+                    categoryRow.innerHTML = `<td colspan="6" style="padding-left: 30px;"><strong>${category}</strong></td>`;
                     tbody.appendChild(categoryRow);
 
                     positions.forEach((pos, idx) => {
                         const vacant = calculateVacant(pos.sanctioned, pos.working);
                         const row = document.createElement('tr');
                         
-                        const nameCell = `<td class="editable-name" onclick="editPositionName('${group}', '${category}', ${idx})" title="क्लिक करके नाम बदलें">${pos.name}</td>`;
+                        const nameCell = `<td class="editable-name" ondblclick="editPositionName('${group}', '${category}', ${idx})" title="डबल क्लिक करके नाम बदलें">${pos.name}</td>`;
+                        
+                        const actionButtons = editMode ? `
+                            <td class="action-cell">
+                                <button class="btn-small btn-delete" onclick="deleteRow('${group}', '${category}', ${idx})">🗑️ हटाएँ</button>
+                                <button class="btn-small btn-add" onclick="insertRowAfter('${group}', '${category}', ${idx})">➕ जोड़ें</button>
+                            </td>
+                        ` : '<td class="action-cell"></td>';
                         
                         row.innerHTML = `
                             <td class="number">${rowNum}</td>
                             ${nameCell}
-                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${idx}, 'sanctioned')" title="क्लिक करके एडिट करें">${pos.sanctioned}</td>
-                            <td class="number editable-cell" onclick="editCell(this, '${group}', '${category}', ${idx}, 'working')" title="क्लिक करके एडिट करें">${pos.working}</td>
+                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'sanctioned')" title="डबल क्लिक करके एडिट करें">${pos.sanctioned}</td>
+                            <td class="number editable-cell" ondblclick="editCell(this, '${group}', '${category}', ${idx}, 'working')" title="डबल क्लिक करके एडिट करें">${pos.working}</td>
                             <td class="number" style="background: #e8f5e9;">${vacant}</td>
+                            ${actionButtons}
                         `;
                         tbody.appendChild(row);
                         catSanctioned += pos.sanctioned;
@@ -879,6 +1016,7 @@
                     <td class="number"><strong>${groupSanctioned}</strong></td>
                     <td class="number"><strong>${groupWorking}</strong></td>
                     <td class="number"><strong>${groupVacant}</strong></td>
+                    <td></td>
                 `;
                 tbody.appendChild(groupTotalRow);
             }
@@ -901,6 +1039,7 @@
                 <td class="number"><strong>${totalSanctioned}</strong></td>
                 <td class="number"><strong>${totalWorking}</strong></td>
                 <td class="number"><strong>${totalVacant}</strong></td>
+                <td></td>
             `;
             tbody.appendChild(grandTotalRow);
         }
@@ -964,6 +1103,19 @@
             input.select();
         }
 
+        function deleteRow(group, category, posIndex) {
+            if (confirm('क्या आप इस पद को हटाना चाहते हैं?')) {
+                positionsData[group][category].splice(posIndex, 1);
+                saveData();
+            }
+        }
+
+        function insertRowAfter(group, category, posIndex) {
+            const newRow = { name: 'नया पद', sanctioned: 0, working: 0 };
+            positionsData[group][category].splice(posIndex + 1, 0, newRow);
+            saveData();
+        }
+
         function toggleEditMode() {
             editMode = !editMode;
             const btn = document.getElementById('editToggle');
@@ -978,6 +1130,7 @@
                 btn.style.background = '#2196F3';
                 indicator.innerHTML = '';
             }
+            renderPositions();
         }
 
         function filterTable() {
